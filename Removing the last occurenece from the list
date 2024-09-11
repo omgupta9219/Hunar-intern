@@ -1,0 +1,102 @@
+#include <iostream>
+using namespace std;
+
+// Node structure for linked list
+struct Node {
+    int data;
+    Node* next;
+};
+
+// Function to create a new node
+Node* createNode(int data) {
+    Node* newNode = new Node();
+    newNode->data = data;
+    newNode->next = nullptr;
+    return newNode;
+}
+
+// Function to insert a node at the end of the list
+void insertNode(Node*& head, int data) {
+    Node* newNode = createNode(data);
+    if (head == nullptr) {
+        head = newNode;
+    } else {
+        Node* temp = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+
+// Function to delete the last occurrence of a specified item
+void deleteLastOccurrence(Node*& head, int key) {
+    Node *temp = head, *lastOccurrence = nullptr;
+    Node *prevLastOccurrence = nullptr, *prev = nullptr;
+
+    // Traverse the list to find the last occurrence of the key
+    while (temp != nullptr) {
+        if (temp->data == key) {
+            lastOccurrence = temp;
+            prevLastOccurrence = prev;
+        }
+        prev = temp;
+        temp = temp->next;
+    }
+
+    // If the key is found
+    if (lastOccurrence != nullptr) {
+        // If the last occurrence is the head node
+        if (lastOccurrence == head) {
+            head = head->next;
+            delete lastOccurrence;
+        } else {
+            prevLastOccurrence->next = lastOccurrence->next;
+            delete lastOccurrence;
+        }
+        cout << "Last occurrence of " << key << " deleted successfully.\n";
+    } else {
+        cout << "Key " << key << " not found in the list.\n";
+    }
+}
+
+// Function to display the list
+void displayList(Node* head) {
+    while (head != nullptr) {
+        cout << head->data << " -> ";
+        head = head->next;
+    }
+    cout << "NULL\n";
+}
+
+// Driver code
+int main() {
+    Node* head = nullptr;
+    int n, value, key;
+    
+    // Taking the input for the original list
+    cout << "Enter the number of elements in the list: ";
+    cin >> n;
+
+    cout << "Enter the elements:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> value;
+        insertNode(head, value);
+    }
+
+    cout << "Original List: ";
+    displayList(head);
+
+    // Input for the value to remove the last occurrence
+    cout << "Enter the value to delete the last occurrence: ";
+    cin >> key;
+
+    // Deleting the last occurrence of the specified value
+    deleteLastOccurrence(head, key);
+
+    // Displaying the updated list
+    cout << "Updated List: ";
+    displayList(head);
+
+    return 0;
+}
